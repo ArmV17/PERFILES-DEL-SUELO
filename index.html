@@ -20,7 +20,7 @@
       flex-wrap: wrap;
     }
 
-    /* Panel de controles (Izquierda) */
+    /* Panel de controles */
     .panel-controles {
       background: white;
       padding: 30px;
@@ -35,7 +35,7 @@
     
     .form-group { margin-bottom: 15px; }
     label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #555; }
-    input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+    input[type="text"], input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
     
     button {
       width: 100%; padding: 12px; background-color: #2e5a44; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px;
@@ -45,7 +45,7 @@
     .btn-descargar { background-color: #8b5a2b; display: none; margin-top: 15px; }
     .btn-descargar:hover { background-color: #6b4421; }
 
-    /* Diseño de la Placa Física (Derecha) */
+    /* Diseño de la Placa Física (Horizontal) */
     .panel-placa {
       display: flex;
       flex-direction: column;
@@ -54,52 +54,89 @@
 
     #placa-exportar {
       background: #ffffff;
-      width: 340px; /* Proporción ideal para ficha técnica */
-      border: 4px solid #2e5a44; /* Borde institucional */
-      border-radius: 16px;
-      padding: 25px 20px;
+      width: 550px; /* Placa más ancha */
+      height: 240px; /* Altura fija */
+      border: 4px solid #2e5a44; 
+      border-radius: 12px;
+      padding: 20px 25px;
       box-sizing: border-box;
-      text-align: center;
       box-shadow: 0 10px 20px rgba(0,0,0,0.15);
       position: relative;
+      display: flex;
+      flex-direction: row; /* Divide en izquierda y derecha */
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .placa-header h1 {
-      font-size: 16px;
+    /* Columna Izquierda (Logo y Textos) */
+    .placa-izquierda {
+      width: 60%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    #logo-institucion {
+      height: 55px; /* Tamaño del escudo */
+      width: auto;
+      margin-bottom: 12px;
+      object-fit: contain;
+    }
+
+    .placa-izquierda h1 {
+      font-size: 19px;
       margin: 0;
       color: #111;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
-    .placa-header h2 {
-      font-size: 13px;
-      margin: 5px 0 20px 0;
+    
+    .placa-izquierda h2 {
+      font-size: 14px;
+      margin: 4px 0 15px 0;
       color: #2e5a44;
-      font-weight: normal;
+      font-weight: 600;
+    }
+
+    .nombre-perfil {
+      font-size: 15px;
+      color: #222;
+      font-weight: bold;
+      margin: 0;
+      padding-top: 12px;
+      border-top: 2px solid #eaeaea;
+      width: 100%;
+    }
+
+    /* Columna Derecha (Código QR) */
+    .placa-derecha {
+      width: 35%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-left: 2px dashed #eaeaea;
+      padding-left: 15px;
     }
 
     #qr-container {
       display: flex;
       justify-content: center;
-      margin-bottom: 20px;
-      min-height: 200px;
       align-items: center;
+      background: #fff;
+      min-height: 150px;
+      min-width: 150px;
     }
 
-    .placa-footer .instruccion {
-      font-size: 14px;
+    .instruccion {
+      font-size: 12px;
       font-weight: bold;
-      color: #c0392b; /* Acento rojo para llamar la atención */
-      margin: 0 0 8px 0;
+      color: #c0392b; 
+      margin: 10px 0 0 0;
       text-transform: uppercase;
-    }
-    .placa-footer .nombre-perfil {
-      font-size: 16px;
-      color: #222;
-      font-weight: bold;
-      margin: 0;
-      padding-top: 10px;
-      border-top: 2px dashed #ccc;
+      text-align: center;
     }
   </style>
 </head>
@@ -118,6 +155,12 @@
       <input type="text" id="nombre" placeholder="Ej: Soto la Marina, Tamaulipas">
     </div>
 
+    <div class="form-group">
+      <label for="logo">Logo de la Institución (Izquierda)</label>
+      <input type="file" id="logo" accept="image/png, image/jpeg">
+      <span style="font-size: 11px; color: #888;">* Reemplaza el escudo de muestra.</span>
+    </div>
+
     <button onclick="generarQR()">1. Actualizar Placa</button>
     <button id="btn-descargar" class="btn-descargar" onclick="descargarPlaca()">2. Descargar Placa (Alta Resolución)</button>
   </div>
@@ -126,23 +169,37 @@
     <p style="margin-top: 0; font-size: 14px; color: #555; font-weight: bold;">Vista Previa de la Placa Física</p>
     
     <div id="placa-exportar">
-      <div class="placa-header">
+      
+      <div class="placa-izquierda">
+        <img id="logo-institucion" src="https://cdn-icons-png.flaticon.com/512/2942/2942784.png" alt="Escudo">
+        
         <h1>U.A.A.A.N.</h1>
         <h2>Ciencias del Suelo</h2>
-      </div>
-      
-      <div id="qr-container">
-        <span style="color: #aaa; font-size: 12px;">[ QR ]</span>
-      </div>
-
-      <div class="placa-footer">
-        <p class="instruccion">Escanea para explorar</p>
         <p class="nombre-perfil" id="texto-nombre">Nombre del Perfil</p>
       </div>
+
+      <div class="placa-derecha">
+        <div id="qr-container">
+          <span style="color: #aaa; font-size: 12px;">[ Escanea ]</span>
+        </div>
+        <p class="instruccion">Escanea aquí</p>
+      </div>
+
     </div>
   </div>
 
   <script>
+    // Escuchar cuando se sube un logo para cambiar la imagen de la placa al instante
+    document.getElementById('logo').addEventListener('change', function(event) {
+      if (event.target.files && event.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('logo-institucion').src = e.target.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }
+    });
+
     function generarQR() {
       const link = document.getElementById('link').value.trim();
       const nombre = document.getElementById('nombre').value.trim();
@@ -154,23 +211,20 @@
         return;
       }
 
-      // 1. Actualizamos el texto en la placa
+      // Actualizar el texto
       textoNombre.innerText = nombre;
 
-      // 2. Limpiamos el contenedor del QR
+      // Limpiar y crear el QR con dimensiones ajustadas al nuevo lado derecho
       contenedorQR.innerHTML = "";
-
-      // 3. Generamos el QR puro (sin textos extra, porque ya están en el diseño de la placa)
       new QRCode(contenedorQR, {
         text: link,
-        width: 220,
-        height: 220,
+        width: 140,  /* Ajustado para el diseño rectangular */
+        height: 140,
         colorDark : "#000000",
         colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
+        correctLevel : QRCode.CorrectLevel.H 
       });
 
-      // Mostramos el botón de descarga
       document.getElementById('btn-descargar').style.display = 'block';
     }
 
@@ -178,8 +232,6 @@
       const placa = document.getElementById('placa-exportar');
       const nombre = document.getElementById('nombre').value.trim();
 
-      // html2canvas toma una foto del div "placa-exportar"
-      // Le ponemos escala 3 para que tenga una resolución excelente para imprenta (300dpi aprox)
       html2canvas(placa, { scale: 3, backgroundColor: null }).then(canvas => {
         const a = document.createElement('a');
         a.href = canvas.toDataURL("image/png");
