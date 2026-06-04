@@ -30,7 +30,7 @@
       width: 100%;
       height: fit-content;
       max-height: 85vh;
-      overflow-y: auto; /* Permite scroll si hay muchos controles */
+      overflow-y: auto;
     }
     
     h2 { color: #2e5a44; margin-top: 0; text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px; }
@@ -64,9 +64,9 @@
 
     #placa-exportar {
       background: #ffffff;
-      width: 550px; 
+      width: 600px; /* Placa un poco más ancha para acomodar logo y textos lado a lado */
       height: 240px; 
-      border: 4px solid #2e5a44; /* Este color ahora será dinámico */
+      border: 4px solid #2e5a44;
       border-radius: 12px;
       padding: 20px 25px;
       box-sizing: border-box;
@@ -79,47 +79,64 @@
       transition: all 0.3s ease;
     }
 
-    /* Columna Izquierda (Logo y Textos) */
+    /* Columna Izquierda (Logo, Textos y Nombre) */
     .placa-izquierda {
-      width: 60%;
+      width: 62%;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: flex-start;
-      text-align: left;
+      align-items: center; /* Esto centra el nombre al final */
+      padding-right: 15px;
+    }
+
+    /* Agrupamos logo y títulos en su propia fila */
+    .encabezado-izquierdo {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      justify-content: flex-start; /* Logo a la izquierda */
+      margin-bottom: 20px;
     }
 
     #logo-institucion {
-      height: 55px; 
+      height: 65px; 
       width: auto;
-      max-width: 250px;
-      margin-bottom: 12px;
+      max-width: 100px;
       object-fit: contain;
+      margin-right: 15px; /* Espacio entre el logo y los textos */
     }
 
-    .placa-izquierda h1 {
-      font-size: 19px;
+    .caja-titulos {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .caja-titulos h1 {
+      font-size: 20px;
       margin: 0;
       color: #111;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
     
-    .placa-izquierda h2 {
+    .caja-titulos h2 {
       font-size: 14px;
-      margin: 4px 0 15px 0;
+      margin: 4px 0 0 0;
       color: #2e5a44; /* Dinámico */
       font-weight: 600;
     }
 
     .nombre-perfil {
-      font-size: 15px;
+      font-size: 17px;
       color: #222;
       font-weight: bold;
       margin: 0;
-      padding-top: 12px;
+      padding-top: 15px;
       border-top: 2px solid #eaeaea;
       width: 100%;
+      text-align: center; /* Nombre en medio */
     }
 
     /* Columna Derecha (Código QR) */
@@ -145,7 +162,7 @@
     .instruccion {
       font-size: 12px;
       font-weight: bold;
-      color: #c0392b; /* Dinámico */
+      color: #c0392b; 
       margin: 10px 0 0 0;
       text-transform: uppercase;
       text-align: center;
@@ -207,10 +224,15 @@
     <p style="margin-top: 0; font-size: 14px; color: #555; font-weight: bold;">Vista Previa en Tiempo Real</p>
     
     <div id="placa-exportar">
+      
       <div class="placa-izquierda">
-        <img id="logo-institucion" src="https://cdn-icons-png.flaticon.com/512/2942/2942784.png" alt="Escudo">
-        <h1 id="vista-titulo1">U.A.A.A.N.</h1>
-        <h2 id="vista-titulo2">Ciencias del Suelo</h2>
+        <div class="encabezado-izquierdo">
+          <img id="logo-institucion" src="https://cdn-icons-png.flaticon.com/512/2942/2942784.png" alt="Escudo">
+          <div class="caja-titulos">
+            <h1 id="vista-titulo1">U.A.A.A.N.</h1>
+            <h2 id="vista-titulo2">Ciencias del Suelo</h2>
+          </div>
+        </div>
         <p class="nombre-perfil" id="vista-nombre">Nombre del Perfil</p>
       </div>
 
@@ -220,6 +242,7 @@
         </div>
         <p class="instruccion" id="vista-instruccion">Escanea aquí</p>
       </div>
+      
     </div>
   </div>
 
