@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generador de Placas QR - UAAAN</title>
+  <title>Generador de Placas QR Pro - Personalizable</title>
   <script src="https://unpkg.com/easyqrcodejs/dist/easy.qrcode.min.js"></script>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   
@@ -20,29 +20,37 @@
       flex-wrap: wrap;
     }
 
-    /* Panel de controles */
+    /* Panel de controles (Izquierda) */
     .panel-controles {
       background: white;
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      max-width: 350px;
+      max-width: 400px;
       width: 100%;
       height: fit-content;
+      max-height: 85vh;
+      overflow-y: auto; /* Permite scroll si hay muchos controles */
     }
     
-    h2 { color: #2e5a44; margin-top: 0; text-align: center; }
+    h2 { color: #2e5a44; margin-top: 0; text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px; }
     
     .form-group { margin-bottom: 15px; }
-    label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #555; }
-    input[type="text"], input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+    .form-row { display: flex; gap: 10px; }
+    .form-row > div { flex: 1; }
+    
+    label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #555; text-transform: uppercase; }
+    input[type="text"], input[type="file"], input[type="color"] { 
+      width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: inherit;
+    }
+    input[type="color"] { padding: 2px; height: 35px; cursor: pointer; }
     
     button {
-      width: 100%; padding: 12px; background-color: #2e5a44; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px;
+      width: 100%; padding: 12px; background-color: #2e5a44; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 15px;
     }
     button:hover { background-color: #203e2f; }
     
-    .btn-descargar { background-color: #8b5a2b; display: none; margin-top: 15px; }
+    .btn-descargar { background-color: #8b5a2b; display: none; }
     .btn-descargar:hover { background-color: #6b4421; }
 
     /* Diseño de la Placa Física (Horizontal) */
@@ -50,22 +58,25 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: sticky;
+      top: 40px;
     }
 
     #placa-exportar {
       background: #ffffff;
-      width: 550px; /* Placa más ancha */
-      height: 240px; /* Altura fija */
-      border: 4px solid #2e5a44; 
+      width: 550px; 
+      height: 240px; 
+      border: 4px solid #2e5a44; /* Este color ahora será dinámico */
       border-radius: 12px;
       padding: 20px 25px;
       box-sizing: border-box;
       box-shadow: 0 10px 20px rgba(0,0,0,0.15);
       position: relative;
       display: flex;
-      flex-direction: row; /* Divide en izquierda y derecha */
+      flex-direction: row; 
       align-items: center;
       justify-content: space-between;
+      transition: all 0.3s ease;
     }
 
     /* Columna Izquierda (Logo y Textos) */
@@ -79,8 +90,9 @@
     }
 
     #logo-institucion {
-      height: 55px; /* Tamaño del escudo */
+      height: 55px; 
       width: auto;
+      max-width: 250px;
       margin-bottom: 12px;
       object-fit: contain;
     }
@@ -96,7 +108,7 @@
     .placa-izquierda h2 {
       font-size: 14px;
       margin: 4px 0 15px 0;
-      color: #2e5a44;
+      color: #2e5a44; /* Dinámico */
       font-weight: 600;
     }
 
@@ -126,14 +138,14 @@
       justify-content: center;
       align-items: center;
       background: #fff;
-      min-height: 150px;
-      min-width: 150px;
+      min-height: 140px;
+      min-width: 140px;
     }
 
     .instruccion {
       font-size: 12px;
       font-weight: bold;
-      color: #c0392b; 
+      color: #c0392b; /* Dinámico */
       margin: 10px 0 0 0;
       text-transform: uppercase;
       text-align: center;
@@ -143,53 +155,76 @@
 <body>
 
   <div class="panel-controles">
-    <h2>Generador de Placas QR</h2>
+    <h2>Personalizar Placa QR</h2>
     
     <div class="form-group">
-      <label for="link">Enlace Directo de Vercel (URL)</label>
+      <label for="link">Enlace (URL del código QR)</label>
       <input type="text" id="link" placeholder="Ej: https://misitio.vercel.app/perfil1.html">
     </div>
 
+    <div class="form-row">
+      <div class="form-group">
+        <label for="titulo1">Título Principal</label>
+        <input type="text" id="titulo1" value="U.A.A.A.N.">
+      </div>
+      <div class="form-group">
+        <label for="titulo2">Subtítulo</label>
+        <input type="text" id="titulo2" value="Ciencias del Suelo">
+      </div>
+    </div>
+
     <div class="form-group">
-      <label for="nombre">Ubicación / Nombre del Perfil</label>
+      <label for="nombre">Nombre de la Muestra / Ubicación</label>
       <input type="text" id="nombre" placeholder="Ej: Soto la Marina, Tamaulipas">
     </div>
 
     <div class="form-group">
-      <label for="logo">Logo de la Institución (Izquierda)</label>
-      <input type="file" id="logo" accept="image/png, image/jpeg">
-      <span style="font-size: 11px; color: #888;">* Reemplaza el escudo de muestra.</span>
+      <label for="texto-instruccion">Texto debajo del QR</label>
+      <input type="text" id="texto-instruccion" value="Escanea aquí">
     </div>
 
-    <button onclick="generarQR()">1. Actualizar Placa</button>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="color-institucional">Color Institucional</label>
+        <input type="color" id="color-institucional" value="#2e5a44" onchange="actualizarColores()">
+      </div>
+      <div class="form-group">
+        <label for="color-alerta">Color de Instrucción</label>
+        <input type="color" id="color-alerta" value="#c0392b" onchange="actualizarColores()">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="logo">Logo de la Institución</label>
+      <input type="file" id="logo" accept="image/png, image/jpeg">
+    </div>
+
+    <button onclick="generarQR()">1. Previsualizar Placa</button>
     <button id="btn-descargar" class="btn-descargar" onclick="descargarPlaca()">2. Descargar Placa (Alta Resolución)</button>
   </div>
 
   <div class="panel-placa">
-    <p style="margin-top: 0; font-size: 14px; color: #555; font-weight: bold;">Vista Previa de la Placa Física</p>
+    <p style="margin-top: 0; font-size: 14px; color: #555; font-weight: bold;">Vista Previa en Tiempo Real</p>
     
     <div id="placa-exportar">
-      
       <div class="placa-izquierda">
         <img id="logo-institucion" src="https://cdn-icons-png.flaticon.com/512/2942/2942784.png" alt="Escudo">
-        
-        <h1>U.A.A.A.N.</h1>
-        <h2>Ciencias del Suelo</h2>
-        <p class="nombre-perfil" id="texto-nombre">Nombre del Perfil</p>
+        <h1 id="vista-titulo1">U.A.A.A.N.</h1>
+        <h2 id="vista-titulo2">Ciencias del Suelo</h2>
+        <p class="nombre-perfil" id="vista-nombre">Nombre del Perfil</p>
       </div>
 
       <div class="placa-derecha">
         <div id="qr-container">
           <span style="color: #aaa; font-size: 12px;">[ Escanea ]</span>
         </div>
-        <p class="instruccion">Escanea aquí</p>
+        <p class="instruccion" id="vista-instruccion">Escanea aquí</p>
       </div>
-
     </div>
   </div>
 
   <script>
-    // Escuchar cuando se sube un logo para cambiar la imagen de la placa al instante
+    // 1. Cambiar el logo en tiempo real
     document.getElementById('logo').addEventListener('change', function(event) {
       if (event.target.files && event.target.files[0]) {
         const reader = new FileReader();
@@ -200,42 +235,73 @@
       }
     });
 
+    // 2. Función para actualizar los colores en tiempo real sin tener que recargar el QR
+    function actualizarColores() {
+      const colorInst = document.getElementById('color-institucional').value;
+      const colorAlerta = document.getElementById('color-alerta').value;
+      
+      // Cambiar borde principal y subtítulo
+      document.getElementById('placa-exportar').style.borderColor = colorInst;
+      document.getElementById('vista-titulo2').style.color = colorInst;
+      
+      // Cambiar color de la instrucción
+      document.getElementById('vista-instruccion').style.color = colorAlerta;
+    }
+
+    // 3. Generar la placa completa
     function generarQR() {
       const link = document.getElementById('link').value.trim();
+      const titulo1 = document.getElementById('titulo1').value.trim() || 'U.A.A.A.N.';
+      const titulo2 = document.getElementById('titulo2').value.trim() || 'Ciencias del Suelo';
       const nombre = document.getElementById('nombre').value.trim();
+      const instruccion = document.getElementById('texto-instruccion').value.trim() || 'Escanea aquí';
+      
       const contenedorQR = document.getElementById('qr-container');
-      const textoNombre = document.getElementById('texto-nombre');
 
       if (!link || !nombre) {
-        alert("Por favor llena el enlace y el nombre del perfil.");
+        alert("Los campos 'Enlace' y 'Nombre de la Muestra' son obligatorios.");
         return;
       }
 
-      // Actualizar el texto
-      textoNombre.innerText = nombre;
+      // Actualizar todos los textos en la placa
+      document.getElementById('vista-titulo1').innerText = titulo1;
+      document.getElementById('vista-titulo2').innerText = titulo2;
+      document.getElementById('vista-nombre').innerText = nombre;
+      document.getElementById('vista-instruccion').innerText = instruccion;
 
-      // Limpiar y crear el QR con dimensiones ajustadas al nuevo lado derecho
+      // Asegurar que los colores estén aplicados
+      actualizarColores();
+
+      // Generar el nuevo código QR
       contenedorQR.innerHTML = "";
       new QRCode(contenedorQR, {
         text: link,
-        width: 140,  /* Ajustado para el diseño rectangular */
+        width: 140, 
         height: 140,
         colorDark : "#000000",
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.H 
       });
 
+      // Mostrar el botón de descarga
       document.getElementById('btn-descargar').style.display = 'block';
     }
 
+    // 4. Descargar la placa final
     function descargarPlaca() {
       const placa = document.getElementById('placa-exportar');
       const nombre = document.getElementById('nombre').value.trim();
 
-      html2canvas(placa, { scale: 3, backgroundColor: null }).then(canvas => {
+      // Configuraciones de html2canvas para la mejor calidad y evitar bordes cortados
+      html2canvas(placa, { 
+        scale: 3, 
+        backgroundColor: '#ffffff',
+        useCORS: true, 
+        logging: false
+      }).then(canvas => {
         const a = document.createElement('a');
         a.href = canvas.toDataURL("image/png");
-        a.download = 'Placa_QR_' + nombre.replace(/\s+/g, '_') + '.png';
+        a.download = 'QR_' + nombre.replace(/\s+/g, '_') + '.png';
         
         document.body.appendChild(a);
         a.click();
